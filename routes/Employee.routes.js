@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 var EmployeeModel = require('./../models/EmployeeModel');
-var PermissionModel = require('./../models/PermissionModel');
+//var PermissionModel = require('./../models/PermissionModel');
 var VerifyToken = require('./VerifyToken');
 const { check, validationResult } = require('express-validator');
 
@@ -33,21 +33,21 @@ router.post('/create',[
         },
        async function (err, user) {
           console.log(user)
-          if(user!==null){
-            let permissioData = {
-              Employee_id: user._id,
-              View:req.body.View || "",
-              Edit: req.body.Edit || "",
-              Add:req.body.Add ||"",
-              Apporval:req.body.Apporval || ""
+          // if(user!==null){
+          //   let permissioData = {
+          //     Employee_id: user._id,
+          //     View:req.body.View || "",
+          //     Edit: req.body.Edit || "",
+          //     Add:req.body.Add ||"",
+          //     Apporval:req.body.Apporval || ""
 
-            }
-            var RoleManagment = await PermissionModel.create(permissioData);
-            var Roleupdate = await EmployeeModel.findByIdAndUpdate(user_id,{Role:RoleManagment._id},{new:true});
-          }
-          else{
-              res.json({Status:"Failed",Message:"Issue in the permission Allocation", Data : {},Code:300});
-          }
+          //   }
+          //   var RoleManagment = await PermissionModel.create(permissioData);
+          //   var Roleupdate = await EmployeeModel.findByIdAndUpdate(user_id,{Role:RoleManagment._id},{new:true});
+          // }
+          // else{
+          //     res.json({Status:"Failed",Message:"Issue in the permission Allocation", Data : {},Code:300});
+          // }
         res.json({Status:"Success",Message:"Added successfully", Data :user ,Code:200}); 
     });      
 }

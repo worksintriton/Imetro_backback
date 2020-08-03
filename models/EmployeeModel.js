@@ -23,10 +23,12 @@ Phone:Number,
 
 Email_Id: String,
 
-Role: {  
-      type: Schema.Types.ObjectId,
-        ref: 'Permissions',
-    }
+Role: Array
+
+// Role: {  
+//       type: Schema.Types.ObjectId,
+//         ref: 'Permissions',
+//     }
 
 });
 
