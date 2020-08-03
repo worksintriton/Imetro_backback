@@ -62,7 +62,7 @@ Authorized_By: {
 
  Authorized_Action: String,
 
- Authorized_Reason_for_Rejection:String
+ Authorized_Reason_for_Rejection:String,
 
  Admin_Approval_Status:String,
 
