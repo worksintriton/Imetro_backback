@@ -6,7 +6,7 @@ var DepartmentSchema = new mongoose.Schema({
   
   Department_Name: String,
 
-  Date: Date,
+  //Date: Date,
 
 });
 

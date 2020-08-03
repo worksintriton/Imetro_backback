@@ -19,6 +19,8 @@ Password:String,
 
 Emp_ID: String,
 
+User_Type:String,
+
 Phone:Number,
 
 Email_Id: String,

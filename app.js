@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 var CatagoryRouter = require('./routes/Catagories.routes');
 var DataItemCodeRouter = require('./routes/DataItemCode.routes');
 var DepartmentRouter = require('./routes/Department.routes');
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 app.use('/category', CatagoryRouter);
 app.use('/unit',UnitRouter);
@@ -36,6 +38,7 @@ app.use('/employee', EmployeeRouter);
 app.use('/entry',EntryRouter);
 app.use('/department',DepartmentRouter);
 app.use('/dataitemcode',DataItemCodeRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

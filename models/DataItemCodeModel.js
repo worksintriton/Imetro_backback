@@ -13,7 +13,7 @@ Entry: {
         ref: 'Entry',
     },
 
-Item_Code: String,
+ItemCode: String,
 
 Formula:String,
 
@@ -26,6 +26,18 @@ Heading: String,
 Description: String,
 
 Explanation: String,
+
+//User_Type:String,
+
+User_code_Assigned_Status:{
+        type: Boolean,
+        default: false
+    },
+
+Authorized_code_Assigned_Status: {
+        type: Boolean,
+        default: false
+    },
 
 Unit:  {  
       type: Schema.Types.ObjectId,
@@ -44,7 +56,7 @@ Value: String,
 
 Remarks: String,
 
-Entry_Date: Date,
+Entry_Date:  { type: Date, default: Date.now},
 
 Savage_Status: String,
 

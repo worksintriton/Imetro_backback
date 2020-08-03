@@ -24,7 +24,7 @@ router.post('/create',[
         },
         function (err, user) {
           console.log(user)
-        res.json({Status:"Success",Message:"Added successfully", Data :user ,Code:200}); 
+        res.json({Status:"Success",Message:"Added successfully", Data : user ,Code:200}); 
     });      
 }
 catch(e){
@@ -58,7 +58,7 @@ router.post('/delete', async function (req, res) {
            if(user == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-          res.json({Status:"Success",Message:"Service Deleted successfully", Data : {} ,Code:200});
+          res.json({Status:"Success",Message:"Catagory Deleted successfully", Data : {} ,Code:200});
       });
 });
 

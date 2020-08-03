@@ -8,7 +8,7 @@ var VerifyToken = require('./VerifyToken');
 const { check, validationResult } = require('express-validator');
 
 router.post('/create',[
-    check('Date').not().isEmpty().withMessage("Not a valid Date"),
+    //check('Date').not().isEmpty().withMessage("Not a valid Date"),
     check('Department_Name').not().isEmpty().withMessage("Please provide valid Department_Name")
   ], async function(req, res) {
   try{
@@ -19,7 +19,7 @@ router.post('/create',[
        //res.status(422).jsonp(errors.array());
     }
      await DepartmentModel.create({
-         Date : req.body.Date || "",
+         //Date : req.body.Date || "",
          Department_Name : req.body.Department_Name || "",
         },
         function (err, user) {
