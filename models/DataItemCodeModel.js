@@ -12,6 +12,10 @@ Entry: {
       type: Schema.Types.ObjectId,
         ref: 'Entry',
     },
+Department:[ {
+  type: Schema.Types.ObjectId,
+        ref: 'Department',
+}],
 
 ItemCode: String,
 

@@ -49,7 +49,7 @@ router.post('/create',[
         },
         function (err, user) {
           console.log(user)
-        res.json({Status:"Success",Message:"Added successfully", Data :user ,Code:200}); 
+        res.json({Status:"Success",Message:"Data Item Code Added successfully", Data :user ,Code:200}); 
     });      
 }
 catch(e){
@@ -64,7 +64,7 @@ router.get('/getlist', async function (req, res) {
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
           res.json({Status:"Success",Message:"DataItemCodeDetails", Data : DataItemCodeDetails ,Code:200});
-        }).populate('Category Entry');
+        }).populate('Category Entry').sort({createdAt:-1});
 });
 
 router.post('/edit', async function (req, res) {
@@ -73,7 +73,7 @@ router.post('/edit', async function (req, res) {
              if(UpdatedDetails == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-             res.json({Status:"Success",Message:"DataItemCodeDetails Updated", Data : UpdatedDetails ,Code:200});
+             res.json({Status:"Success",Message:"DataItem Code Details Updated Successfully", Data : UpdatedDetails ,Code:200});
         });
 });
 

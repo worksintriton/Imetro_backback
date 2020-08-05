@@ -24,7 +24,7 @@ router.post('/create',[
         },
         function (err, user) {
           console.log(user)
-        res.json({Status:"Success",Message:"Added successfully", Data : user ,Code:200}); 
+        res.json({Status:"Success",Message:"Category Added successfully", Data : user ,Code:200}); 
     });      
 }
 catch(e){
@@ -48,7 +48,7 @@ router.post('/edit', async function (req, res) {
              if(UpdatedDetails == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-             res.json({Status:"Success",Message:"CategoryDetails Updated", Data : UpdatedDetails ,Code:200});
+             res.json({Status:"Success",Message:"CategoryDetails Updated successfully", Data : UpdatedDetails ,Code:200});
         });
 });
 // // DELETES A USER FROM THE DATABASE
@@ -58,7 +58,7 @@ router.post('/delete', async function (req, res) {
            if(user == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-          res.json({Status:"Success",Message:"Catagory Deleted successfully", Data : {} ,Code:200});
+          res.json({Status:"Success",Message:"Category Deleted successfully", Data : {} ,Code:200});
       });
 });
 

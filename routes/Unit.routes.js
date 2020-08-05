@@ -24,7 +24,7 @@ router.post('/create',[
         },
         function (err, user) {
           console.log(user)
-        res.json({Status:"Success",Message:"Added successfully", Data :user ,Code:200}); 
+        res.json({Status:"Success",Message:"Unit Added successfully", Data :user ,Code:200}); 
     });      
 }
 catch(e){
@@ -39,7 +39,7 @@ router.get('/getlist', async function (req, res) {
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
           res.json({Status:"Success",Message:"UnitDetails", Data : UnitDetails ,Code:200});
-        });
+        }).sort({createdAt:-1});
 });
 
 router.post('/edit', async function (req, res) {
@@ -48,7 +48,7 @@ router.post('/edit', async function (req, res) {
              if(UpdatedDetails == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-             res.json({Status:"Success",Message:"UnitDetails Updated", Data : UpdatedDetails ,Code:200});
+             res.json({Status:"Success",Message:"Unit Details Updated Successfully", Data : UpdatedDetails ,Code:200});
         });
 });
 // // DELETES A USER FROM THE DATABASE

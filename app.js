@@ -10,6 +10,7 @@ var DepartmentRouter = require('./routes/Department.routes');
 var EmployeeRouter = require('./routes/Employee.routes');
 var EntryRouter = require('./routes/Entry.routes');
 var UnitRouter = require('./routes/Unit.routes');
+var UserRouter = require('./routes/Users.routes');
 var app = express();
 
 //Databaseconnection
@@ -38,6 +39,7 @@ app.use('/employee', EmployeeRouter);
 app.use('/entry',EntryRouter);
 app.use('/department',DepartmentRouter);
 app.use('/dataitemcode',DataItemCodeRouter);
+app.use('/users',UserRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
