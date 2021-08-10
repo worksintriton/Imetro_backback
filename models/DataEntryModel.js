@@ -8,6 +8,20 @@ Employee_id: {
       type: Schema.Types.ObjectId,
         ref: 'Employee',
     },
+Authorized_To: { 
+      type: Schema.Types.ObjectId,
+        ref: 'Employee',
+    },
+
+Department: { 
+      type: Schema.Types.ObjectId,
+        ref: 'Department',
+    },
+
+Entry:{
+     type: Schema.Types.ObjectId,
+        ref: 'Entry',
+    },
 
 DataItemCode: {  
       type: Schema.Types.ObjectId,
@@ -24,13 +38,29 @@ Remarks: {
     default: ''
 },
 
-Financial_Start_Year: { type: Date, default: Date.now},
+Financial_Year: String,
 
-Financial_End_Year: { type: Date, default: Date.now},
 
-Entry_Date:  { type: Date, default: Date.now},
+Financial_Start_Year: String,
 
-Submitted_Date:  { type: Date, default: Date.now},
+Financial_End_Year: String,
+
+Entry_Date:  String,
+
+user_Submitted_Date: {
+    type: String,
+    default: ""
+},
+
+auth_Submitted_Date: {
+    type: String,
+    default: ""
+},
+
+admin_Submitted_Date: {
+    type: String,
+    default: ""
+},
 
 Submitted_Time: {
     type: String,
@@ -43,6 +73,10 @@ Savage_Status: {
 },
 
 Submitted_By_Employee:  {  
+      type: Schema.Types.ObjectId,
+        ref: 'Employee',
+    },
+Submitted_By_Authorized:  {  
       type: Schema.Types.ObjectId,
         ref: 'Employee',
     },
@@ -63,6 +97,11 @@ Authorized_By: {
 },
 
  Authorized_Reason_for_Rejection:{
+    type: String,
+    default: ''
+},
+
+ Admin_Request_Status: {
     type: String,
     default: ''
 },

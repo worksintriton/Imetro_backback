@@ -5,8 +5,8 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 var EmployeeModel = require('./../models/EmployeeModel');
 var SuperAdminModel = require('./../models/SuperAdminModel');
-var DataItemCodeModel = require('./../models/DataItemCodeModel');
-var DataEntryModel = require('./../models/DataEntryModel');
+var DataItemCodeModel = require('./../models/GroupdataitemcodeModel');
+var DataEntryModel = require('./../models/GroupDataEntryModel');
 //var PermissionModel = require('./../models/PermissionModel');
 var VerifyToken = require('./VerifyToken');
 const { check, validationResult } = require('express-validator');
@@ -17,13 +17,11 @@ router.post('/create',[
   ], async function(req, res) {
   try{
      const errors = validationResult(req);
-      console.log(errors)
       if (!errors.isEmpty()) {
       return res.json({Status:"Failed",Message: errors.array(), Data :[],Code:422});
        //res.status(422).jsonp(errors.array());
     }
     var Employeecheck = await EmployeeModel.findOne({Emp_ID:req.body.Emp_ID});
-    console.log(Employeecheck)
     if(Employeecheck != null){
     	res.json({Status:"Failed",Message:"Employee with ID already exists", Data : {},Code:300});
     }
@@ -43,20 +41,17 @@ router.post('/create',[
          User_Type:req.body.User_Type || ""
         },
        async function (err, user) {
-          console.log(user)
           if(user!==null){
             if(req.body.User_Type === "User")
             {
             //var DataItemcodeupdate = await DataEntryModel.update({DataItemCode: {$in :req.body.DataItemCode}}, {$set:{User_code_Assigned_Status: true}}, {multi: true});
             var DataItemcodeupdate = await DataItemCodeModel.updateMany({_id:{$in:req.body.DataItemCode}},{$push:{Department:req.body.Department}});
-            console.log(DataItemcodeupdate)
             res.json({Status:"Success",Message:"User Created successfully", Data :user ,Code:200}); 
             }
             else{
                var DataItemcodeupdate = await DataItemCodeModel.updateMany({_id:{$in:req.body.DataItemCode}},{$push:{Department:req.body.Department}});
               //var DataItemcodeupdate = await DataEntryModel.update({DataItemCode: {$in :req.body.DataItemCode}}, {$set:{Authorized_code_Assigned_Status: true}}, {multi: true});
               res.json({Status:"Success",Message:"User Created successfully", Data :user ,Code:200}); 
-              console.log(DataItemcodeupdate)
             }
           }
           else{
@@ -78,7 +73,6 @@ router.post('/login', async function (req, res) {
            }
          else
            {
-            console.log(EmployeeDetails)
            	//var financialyearcheck = await DataEntryModel.find({Financial_Start_Year:req.body.Start_Year,Financial_End_Year:req.body.End_Year});
            	res.json({Status:"Success",Message:"EmployeeDetails", Data : EmployeeDetails ,Code:200});
            }
@@ -172,7 +166,6 @@ router.post('/getdatelist', async function (req, res) {
 
 router.post('/approvestatus', async function (req, res) {
   try{
-    console.log(req.body);
     if(req.body.Status == "Approved")
     {
       var UpdatedData = await DataEntryModel.findByIdAndUpdate({_id:req.body.DataEntry_id},{Request_Approval_Status:req.body.Status,Authorized_Action:req.body.Status,Authorized_By:req.body.Employee_id,auth_Submitted_Date:req.body.auth_Submitted_Date},{
@@ -188,7 +181,6 @@ return res.json({Status:"Success",Message:"Status Updated successfully", Data : 
   }
 }
 catch(e){
-  console.log(e)
  return res.json({Status:"Failed",Message:"Internal server Error", Data : {},Code:500});
 }
 });
@@ -198,7 +190,6 @@ catch(e){
 
 router.post('/auth_retry', async function (req, res) {
   try{
-    console.log("***************",req.body);
     if(req.body.Status == "Approved")
     {
       // var getlist = await DataEntryModel.find({_id:req.body.DataEntry_id});
@@ -216,7 +207,6 @@ return res.json({Status:"Success",Message:"Status Updated successfully", Data : 
   }
 }
 catch(e){
-  console.log(e)
  return res.json({Status:"Failed",Message:"Internal server Error", Data : {},Code:500});
 }
 });
@@ -241,7 +231,6 @@ catch(e){
 
 router.post('/authentrylist_bydate', async function (req, res) {
   try{
-      console.log("Input",req.body.start_date,req.body.end_date);
       var start_date = new Date(req.body.start_date);
       // var sdate = +start_date.getDate();
       // var smonth = +start_date.getMonth() + 1;
@@ -288,8 +277,11 @@ router.post('/authentrylist_bydate', async function (req, res) {
 
 router.post('/authentrylist', async function (req, res) {
   try{
+    console.log(req.body);
     var EmployeeDetails = await EmployeeModel.findOne({_id:req.body.Employee_id}).populate('Department');
-    console.log(EmployeeDetails);
+    // console.log("EmployeeDetails",EmployeeDetails);
+    var TempData= await DataEntryModel.find({Authorized_To:req.body.Employee_id});
+    console.log('TempData',TempData);
     let EntryDetails = await DataEntryModel.find({Authorized_To:req.body.Employee_id,Savage_Status:"Finalize",Financial_Year:req.body.Financial_Year}).populate({path: 'DataItemCode Submitted_By_Employee Authorized_To', populate: { path: 'Entry'}}).sort({"updatedAt":-1});
     EntryDetails.sort(function(a, b) {
     return parseFloat(a.DataItemCode.Report_SNo) - parseFloat(b.DataItemCode.Report_SNo);
@@ -297,7 +289,24 @@ router.post('/authentrylist', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : EntryDetails ,Code:200});   
   }
   catch(e){
-    console.log(e)
+     return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
+  }
+});
+
+
+router.post('/authentrylist2', async function (req, res) {
+  try{
+    var EmployeeDetails = await EmployeeModel.findOne({_id:req.body.Employee_id}).populate('Department');
+    // console.log("EmployeeDetails",EmployeeDetails);
+    var TempData= await DataEntryModel.find({Authorized_To:req.body.Employee_id});
+    console.log('TempData',TempData);
+    let EntryDetails = await DataEntryModel.find({Authorized_To:req.body.Employee_id,Savage_Status:"Finalize",Financial_Year:req.body.Financial_Year}).populate({path: 'DataItemCode Submitted_By_Employee Authorized_To', populate: { path: 'Entry'}}).sort({"updatedAt":-1});
+    EntryDetails.sort(function(a, b) {
+    return parseFloat(a.DataItemCode.Report_SNo) - parseFloat(b.DataItemCode.Report_SNo);
+     });
+    res.json({Status:"Success",Message:"EntryDetails", Data : EntryDetails ,Code:200});   
+  }
+  catch(e){
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -306,7 +315,6 @@ router.post('/authentrylist', async function (req, res) {
 
 router.post('/authentrylist1', async function (req, res) {
   try{
-     console.log(req.body);
        Entry_freq = [];
        Date_Filter = [];
        item_code_fiter = [];
@@ -317,7 +325,6 @@ router.post('/authentrylist1', async function (req, res) {
        }else{
           Entry_freq = await DataEntryModel.find({Authorized_To:req.body.Employee_id,Savage_Status:"Finalize",Entry:req.body.Entry_type,Financial_Year:req.body.Financial_Year}).populate({path: 'DataItemCode Submitted_By_Employee Authorized_To', populate: { path: 'Entry'}}).sort({"updatedAt":-1});
        }
-       console.log(Entry_freq[0].Entry);
        if(req.body.From_date == "All" && req.body.To_date == "All"){
            Date_Filter = Entry_freq;
        }else{
@@ -325,9 +332,7 @@ router.post('/authentrylist1', async function (req, res) {
                      var start_date = new Date(req.body.From_date);
                      var end_date =  new Date(req.body.To_date);
                      var entered_date =  new Date(Entry_freq[a].Entry_Date);
-                     console.log(start_date,end_date,entered_date);
                       if(entered_date <= end_date && entered_date >= start_date){
-                        console.log("True");
                         Date_Filter.push(Entry_freq[a]);
                       }
                  }
@@ -335,12 +340,9 @@ router.post('/authentrylist1', async function (req, res) {
        if(req.body.Item_code == "All"){
            item_code_fiter = Date_Filter;
        }else{
-        console.log("Date_Filter",Date_Filter)
              for(let a = 0 ; a < Date_Filter.length ; a ++){
-                console.log(Date_Filter[a].DataItemCode.Data_Item,req.body.Item_code);
                 if(Date_Filter[a].DataItemCode.ItemCode == req.body.Item_code){
                   item_code_fiter.push(Date_Filter[a]);
-                  console.log("Trues");
                 } 
              }
        }if(req.body.Status == "All"){
@@ -370,7 +372,6 @@ router.post('/authentrylist1', async function (req, res) {
        res.json({Status:"Success",Message:"Data Entry Updated Added successfully", Data :final_Data , Data_count:final_Data.length, Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -383,7 +384,6 @@ router.post('/approvedlist', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : EntryDetails ,Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -394,7 +394,6 @@ router.post('/admindatalist', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : EntryDetails ,Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -405,7 +404,6 @@ router.post('/adminentrylist', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : EntryDetails ,Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -417,7 +415,6 @@ router.post('/adminstatuschange', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : StatusChange ,Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -429,7 +426,6 @@ router.post('/finalstatuschange', async function (req, res) {
     res.json({Status:"Success",Message:"EntryDetails", Data : StatusChange ,Code:200});
   }
   catch(e){
-    console.log(e)
      return res.json({Status:"Failed",Message:"Internal Server error", Data : {},Code:500});
   }
 });
@@ -466,7 +462,6 @@ router.post('/authcatlist', async function (req, res) {
 router.post('/usertypecatlist', async function (req, res) {
   try{
     var Authlist = await EmployeeModel.findOne({_id:req.body.Authorized_To});
-    console.log(Authlist)
     var DataItemlist = await DataItemCodeModel.find({_id: {$in : Authlist.DataItemCode}});
      res.json({Status:"Success",Message:"Data Item code list", Data : DataItemlist ,Code:200});
   }
@@ -504,7 +499,6 @@ router.post('/employee_edit', async function (req, res) {
 
 router.post('/edit', async function (req, res) {
 	var DataItemcodedetails = await EmployeeModel.findOne({_id:req.body.Employee_id}).select('DataItemCode User_Type');
-	console.log(DataItemcodedetails);
 	if(DataItemcodedetails.User_Type === "User"){
 	var DataItemcodeupdate = await DataEntryModel.update({DataItemCode:{$in:DataItemcodedetails.DataItemCode}},{ $set:{User_code_Assigned_Status: false}},{multi: true});
 	}
@@ -516,12 +510,10 @@ router.post('/edit', async function (req, res) {
              if(UpdatedDetails == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-           console.log("New Data", UpdatedDetails);
            if(UpdatedDetails.User_Type === "User"){
 	var DataItemcodeupdate = await DataEntryModel.update({DataItemCode:{$in:req.body.DataItemCode}},{ $set:{User_code_Assigned_Status: true}},{multi: true});
 	}
 	else{
-		console.log("Entered here...");
 	var DataItemcodeupdate = await DataEntryModel.update({DataItemCode:{$in:req.body.DataItemCode}},{ $set:{Authorized_code_Assigned_Status: true}},{multi: true});
 	}
              res.json({Status:"Success",Message:"Employee Details Updated successfully", Data : UpdatedDetails ,Code:200});
@@ -538,16 +530,6 @@ router.post('/delete', async function (req, res) {
           res.json({Status:"Success",Message:"Employee Deleted successfully", Data : {} ,Code:200});
       });
 });
-
-
-router.get('/getlist_employeemodel', function (req, res) {
-      EmployeeModel.find({}, function (err, user) {
-          if (err) return res.json({Status:"Failed",Message:"Internal Server Error", Data : {},Code:500});
-          res.json({Status:"Success",Message:"Entry datas Deleted successfully", Data : {} ,Code:200});
-      });
-});
-
-
 
 
 

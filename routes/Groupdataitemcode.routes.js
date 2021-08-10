@@ -3,12 +3,12 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-var DataItemCodeModel = require('./../models/DataItemCodeModel');
+var DataItemCodeModel = require('./../models/GroupdataitemcodeModel');
 var VerifyToken = require('./VerifyToken');
 const { check, validationResult } = require('express-validator');
 
 router.post('/create',[
-    check('Category').not().isEmpty().withMessage("Not a valid Date"),
+    // check('Category').not().isEmpty().withMessage("Not a valid Date"),
     check('Entry').not().isEmpty().withMessage("Please provide valid Entry")
   ], async function(req, res) {
   try{
@@ -50,6 +50,7 @@ router.post('/create',[
 }
 }
 catch(e){
+  console.log(e);
       res.json({Status:"Failed",Message:"Internal Server Error", Data : {},Code:500});
 }
 });
@@ -60,11 +61,11 @@ router.get('/getlist', async function (req, res) {
         await DataItemCodeModel.find({}, function (err, DataItemCodeDetails) {
           if(err) return res.json({Status:"Failed",Message:"Internal Server Error", Data : {},Code:500});
            if(DataItemCodeDetails == ""){
-            return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
+            return res.json({Status:"Failed",Message:"No data Found", Data : [],Code:404});
            }
            console.log(DataItemCodeDetails);
           res.json({Status:"Success",Message:"DataItemCodeDetails", Data : DataItemCodeDetails ,Code:200});
-        }).populate('Category Entry').sort({"Report_SNo":1});
+        }).populate('Entry').sort({"Report_SNo":1});
 });
 
 

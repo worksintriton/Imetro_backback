@@ -8,6 +8,15 @@ Department: {
       type: Schema.Types.ObjectId,
         ref: 'Department',
     },
+Category: {  
+      type: Schema.Types.ObjectId,
+        ref: 'Category',
+    },
+Authorized_To: {  
+      type: Schema.Types.ObjectId,
+        ref: 'Employee',
+    },
+
 DataItemCode: [{  
       type: Schema.Types.ObjectId,
         ref: 'DataItemCode',

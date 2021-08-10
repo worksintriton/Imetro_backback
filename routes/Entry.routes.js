@@ -48,7 +48,7 @@ router.post('/edit', async function (req, res) {
              if(UpdatedDetails == ""){
             return res.json({Status:"Failed",Message:"No data Found", Data : {},Code:404});
            }
-             res.json({Status:"Success",Message:"EntryDetails Updated successfully", Data : UpdatedDetails ,Code:200});
+             res.json({Status:"Success",Message:"Entry Details Updated successfully", Data : UpdatedDetails ,Code:200});
         });
 });
 // // DELETES A USER FROM THE DATABASE

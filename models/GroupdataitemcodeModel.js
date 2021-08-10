@@ -2,12 +2,9 @@ var mongoose = require('mongoose');
 var timestamps = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
 
-var DataIteamCodeSchema = new mongoose.Schema({   
+var GroupDataIteamCodeSchema = new mongoose.Schema({   
 
-Category: {  
-      type: Schema.Types.ObjectId,
-        ref: 'Category',
-    },
+Category: String,
 Entry: {  
       type: Schema.Types.ObjectId,
         ref: 'Entry',
@@ -64,8 +61,8 @@ Financial_End_Year: Number,
 
 });
 
-DataIteamCodeSchema.plugin(timestamps);
+GroupDataIteamCodeSchema.plugin(timestamps);
 
-mongoose.model('DataItemCode', DataIteamCodeSchema);
+mongoose.model('GroupDataItemCode', GroupDataIteamCodeSchema);
 
-module.exports = mongoose.model('DataItemCode');
+module.exports = mongoose.model('GroupDataItemCode');
